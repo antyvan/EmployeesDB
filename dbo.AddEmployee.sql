@@ -15,39 +15,48 @@ CREATE PROCEDURE [dbo].[AddEmployee]
 	@ProjectId INT,
 	@SuperiorId INT = NULL, 
 	@MonthlyPay MONEY,
-	@EffectiveFrom DATE = NULL -- Use current date if it's null
+	@EffectiveFrom DATE = NULL, -- Use current date if it's null
+	@EmployeeId INT = NULL OUT
 
 AS
 SET NOCOUNT ON; -- Don't report the number of processed row to client
 SET XACT_ABORT ON; -- Enable transaction aborting on constraint failure
 
-DECLARE @EmployeeId INT
-
 IF @EffectiveFrom IS NULL
 BEGIN
 	SET @EffectiveFrom = GETDATE()
 END
- 
---Use transactions to guarantee atomic insertion
-BEGIN TRAN
 
-	INSERT INTO dbo.Employee (FirstName, LastName, SuperiorId)
-	VALUES (@FirstName, @LastName, @SuperiorId)
+BEGIN TRY 
+	--Use transactions to guarantee atomic insertion
+	BEGIN TRAN
 
-	SET @EmployeeId = @@IDENTITY
+		INSERT INTO dbo.Employee (FirstName, LastName, SuperiorId)
+		VALUES (@FirstName, @LastName, @SuperiorId)
 
-	--NB. Error should be reported if the position id is invalid
-	INSERT INTO dbo.EmployeePosition (EmployeeId, PositionId, EffectiveFrom)
-	VALUES (@EmployeeId, @PositionId, @EffectiveFrom)
+		SET @EmployeeId = @@IDENTITY
 
-	--NB. Error should be reported if the project id is invalid
-	INSERT INTO dbo.EmployeeProject(EmployeeId, ProjectId, EffectiveFrom)
-	VALUES (@EmployeeId, @ProjectId, @EffectiveFrom)
+		--NB. Error should be reported if the position id is invalid
+		INSERT INTO dbo.EmployeePosition (EmployeeId, PositionId, EffectiveFrom)
+		VALUES (@EmployeeId, @PositionId, @EffectiveFrom)
 
-	INSERT INTO dbo.Salary(EmployeeId, MonthlyPay, EffectiveFrom)
-	VALUES (@EmployeeId, @MonthlyPay, @EffectiveFrom)
+		--NB. Error should be reported if the project id is invalid
+		INSERT INTO dbo.EmployeeProject(EmployeeId, ProjectId, EffectiveFrom)
+		VALUES (@EmployeeId, @ProjectId, @EffectiveFrom)
 
-	INSERT INTO dbo.WorkPeriod(EmployeeId, EffectiveFrom)
-	VALUES (@EmployeeId, @EffectiveFrom)
+		INSERT INTO dbo.Salary(EmployeeId, MonthlyPay, EffectiveFrom)
+		VALUES (@EmployeeId, @MonthlyPay, @EffectiveFrom)
 
-COMMIT TRAN
+		INSERT INTO dbo.WorkPeriod(EmployeeId, EffectiveFrom)
+		VALUES (@EmployeeId, @EffectiveFrom)
+
+	COMMIT TRAN
+END TRY
+BEGIN CATCH
+
+	IF (XACT_STATE()) = -1
+		ROLLBACK;
+
+	THROW;
+END CATCH
+GO
