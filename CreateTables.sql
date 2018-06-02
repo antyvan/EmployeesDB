@@ -47,6 +47,7 @@ CREATE TABLE [dbo].[Employee]
  [FirstName]  VARCHAR(40) NOT NULL,
  [LastName]   VARCHAR(40) NOT NULL,
  [SuperiorId] INT NULL FOREIGN KEY REFERENCES [dbo].[Employee](EmployeeId)
+ CONSTRAINT UC_Employee_FLName UNIQUE (FirstName, LastName)
 );
 
 GO

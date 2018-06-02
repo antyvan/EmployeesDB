@@ -6,7 +6,7 @@ INSERT INTO [dbo].[Position] (PositionName) VALUES
 ('QA Test Engineer'),
 ('Business Analyst'),
 ('Project Manager'),
-('Chief Excutive Officer')
+('Chief Executive Officer')
 
 GO
 
