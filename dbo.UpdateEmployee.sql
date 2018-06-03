@@ -12,7 +12,6 @@ CREATE PROCEDURE [dbo].[UpdateEmployee]
 	@EmployeeId INT,
 	@FirstName VARCHAR(40) = NULL,
 	@LastName VARCHAR(40) = NULL,
-	@SuperiorId INT = NULL,
 	@PositionId INT = NULL,
 	@ProjectId INT = NULL,
 	@MonthlyPay MONEY = NULL,
@@ -42,9 +41,6 @@ BEGIN TRY
 
 	IF (@LastName IS NOT NULL AND @LastName != (SELECT LastName FROM dbo.Employee WHERE EmployeeId = @EmployeeId))
 		UPDATE dbo.Employee SET LastName = @LastName WHERE EmployeeId = @EmployeeId
-
-	IF (@SuperiorId IS NOT NULL AND @SuperiorId != (SELECT SuperiorId FROM dbo.Employee WHERE EmployeeId = @EmployeeId))
-		UPDATE dbo.Employee SET SuperiorId = @SuperiorId WHERE EmployeeId = @EmployeeId
 
 	IF (@PositionId IS NOT NULL AND @PositionId != (SELECT PositionId FROM dbo.EmployeePosition WHERE EmployeeId=@EmployeeId AND EffectiveTo IS NULL))
 	BEGIN
