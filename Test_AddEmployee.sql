@@ -1,8 +1,10 @@
-﻿DECLARE @PositionId INT,
+﻿USE [EmployeesDB];
+GO
+
+DECLARE @PositionId INT,
 		@ProjectId INT,
 		@EmployeeId INT,
 		@EffectiveFrom DATE
-
 
 SELECT @PositionId = PositionId from dbo.Position where PositionName='Chief Executive Officer'
 SELECT @ProjectId = ProjectId from dbo.Project where ProjectName='Company Management'
@@ -77,10 +79,10 @@ END
 PRINT 'Test the director has been accepted'
 
 IF 
-	(
-			select count(1) from dbo.WorkPeriod wp
+	EXISTS(
+			select 1 from dbo.WorkPeriod wp
 			where wp.EmployeeId = @EmployeeId and wp.EffectiveFrom = @EffectiveFrom and wp.EffectiveTo IS NULL
-	) = 1
+	)
 	PRINT 'Success'
 ELSE
 BEGIN
@@ -102,7 +104,7 @@ PRINT 'Test adding a subordinate'
 SELECT @PositionId = PositionId from dbo.Position where PositionName='Project Manager'
 SELECT @ProjectId = ProjectId from dbo.Project where ProjectName='Project A'
 BEGIN TRY
-	exec dbo.AddEmployee 'Mickey', 'Mouse', @PositionId, @ProjectId, @EmployeeId, 5000, @EffectiveFrom, @EmployeeId OUT
+	exec dbo.AddEmployee 'Bill', 'Gates', @PositionId, @ProjectId, @EmployeeId, 5000, @EffectiveFrom, @EmployeeId OUT
 	PRINT 'Success'
 END TRY
 BEGIN CATCH
@@ -111,18 +113,15 @@ BEGIN CATCH
 END CATCH
 ------------------------------------------------------------------
 PRINT 'Test the subordinate has a superior'
-IF	(
-		select count(1) from dbo.Employee where EmployeeId = @EmployeeId and SuperiorId=1
-	) = 1
+IF	EXISTS(
+		select 1 from dbo.Employee where EmployeeId = @EmployeeId and SuperiorId=1
+	)
 	PRINT 'Success'
 ELSE
 BEGIN
 	PRINT 'FAIL'
 	RETURN
 END
-
-
-
 
 
 /*
