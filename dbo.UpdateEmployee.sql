@@ -15,7 +15,6 @@ CREATE PROCEDURE [dbo].[UpdateEmployee]
 	@PositionId INT = NULL,
 	@ProjectId INT = NULL,
 	@MonthlyPay MONEY = NULL,
-	@Dismiss BIT = NULL,
 	@EffectiveFrom DATE = NULL -- Use current date if it's null. It's expected to be greater than currently used for the active record.
 								-- Ideally, I'd test it but I won't do it purposefully to minimize checks
 
@@ -71,24 +70,6 @@ BEGIN TRY
 		INSERT INTO dbo.Salary (EmployeeId, MonthlyPay, EffectiveFrom)
 		VALUES (@EmployeeId, @MonthlyPay, @EffectiveFrom)
 	END
-
-	IF (@Dismiss IS NOT NULL)
-		IF (EXISTS(SELECT 1 FROM dbo.WorkPeriod WHERE EmployeeId=@EmployeeId AND EffectiveTo IS NULL) ) -- Hired
-		BEGIN
-			IF @Dismiss = 1 -- should be dismissed
-			BEGIN
-				UPDATE dbo.WorkPeriod SET EffectiveTo = DATEADD(DAY, -1, @EffectiveFrom)
-				WHERE EmployeeId = @EmployeeId AND EffectiveTo IS NULL				
-			END
-		END
-		ELSE -- Dismissed
-		BEGIN
-			IF @Dismiss = 0 -- should be hired
-			BEGIN
-				INSERT INTO dbo.WorkPeriod (EmployeeId, EffectiveFrom)
-				VALUES (@EmployeeId, @EffectiveFrom)				
-			END
-		END
 
 	COMMIT TRAN
 

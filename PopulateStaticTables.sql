@@ -1,6 +1,9 @@
 USE [EmployeesDB];
 GO
 
+SET NOCOUNT ON;
+
+DELETE FROM [dbo].[Position]
 INSERT INTO [dbo].[Position] (PositionName) VALUES
 ('Software Developer'),
 ('QA Test Engineer'),
@@ -8,8 +11,7 @@ INSERT INTO [dbo].[Position] (PositionName) VALUES
 ('Project Manager'),
 ('Chief Executive Officer')
 
-GO
-
+DELETE FROM [dbo].[Project]
 INSERT INTO [dbo].[Project] (ProjectName) VALUES
 ('Project A'),
 ('Project B'),

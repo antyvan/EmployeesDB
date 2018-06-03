@@ -1,9 +1,16 @@
 ﻿USE [EmployeesDB];
 GO
-
+SET NOCOUNT ON;
 BEGIN TRY
 
 BEGIN TRAN;
+
+TRUNCATE TABLE dbo.EmployeePosition
+TRUNCATE TABLE dbo.EmployeeProject
+TRUNCATE TABLE dbo.Salary
+TRUNCATE TABLE dbo.WorkPeriod
+DELETE dbo.Employee WHERE SuperiorId IS NOT NULL
+DELETE dbo.Employee WHERE SuperiorId IS NULL
 
 DECLARE @SuperiorPositionId INT,
 		@SuperiorProjectId INT,
@@ -58,24 +65,6 @@ EXEC dbo.AddEmployee 'Bill', 'Gates', @SubordinatePositionId, @SubordinateProjec
 	IF (select sal.MonthlyPay from dbo.Employee emp
 				join dbo.Salary sal on emp.EmployeeId = sal.EmployeeId
 				where emp.EmployeeId=@SuperiorId and sal.EffectiveTo is NULL) = 1000
-		PRINT 'Success'
-	ELSE
-		RAISERROR('FAIL', 11, 1)
-
-	PRINT 'Test dismissal'
-	EXEC [dbo].[UpdateEmployee] @EmployeeId = @SuperiorId, @Dismiss = 1
-	IF NOT EXISTS(select 1 from dbo.Employee emp
-				join dbo.WorkPeriod wp on emp.EmployeeId = wp.EmployeeId
-				where emp.EmployeeId=@SuperiorId and wp.EffectiveTo is NULL)
-		PRINT 'Success'
-	ELSE
-		RAISERROR('FAIL', 11, 1)
-
-	PRINT 'Test restoration'
-	EXEC [dbo].[UpdateEmployee] @EmployeeId = @SuperiorId, @Dismiss = 0
-	IF EXISTS(select 1 from dbo.Employee emp
-				join dbo.WorkPeriod wp on emp.EmployeeId = wp.EmployeeId
-				where emp.EmployeeId=@SuperiorId and wp.EffectiveTo is NULL)
 		PRINT 'Success'
 	ELSE
 		RAISERROR('FAIL', 11, 1)

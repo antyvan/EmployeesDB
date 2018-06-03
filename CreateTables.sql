@@ -57,7 +57,7 @@ GO
 CREATE TABLE [dbo].[Project]
 (
  [ProjectId] INT IDENTITY(1,1) PRIMARY KEY,
- [ProjectName] VARCHAR(40) NOT NULL
+ [ProjectName] VARCHAR(40) NOT NULL UNIQUE
 );
 
 GO
@@ -80,7 +80,7 @@ GO
 CREATE TABLE [dbo].[Position]
 (
  [PositionId] INT IDENTITY(1,1) PRIMARY KEY,
- [PositionName] VARCHAR(40) NOT NULL
+ [PositionName] VARCHAR(40) NOT NULL UNIQUE
 );
 
 GO

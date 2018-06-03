@@ -1,6 +1,8 @@
 ﻿USE [EmployeesDB];
 GO
 
+SET NOCOUNT ON;
+
 DECLARE @PositionId INT,
 		@ProjectId INT,
 		@EmployeeId INT,
@@ -9,6 +11,14 @@ DECLARE @PositionId INT,
 BEGIN TRY
 
 BEGIN TRANSACTION;
+
+TRUNCATE TABLE dbo.EmployeePosition
+TRUNCATE TABLE dbo.EmployeeProject
+TRUNCATE TABLE dbo.Salary
+TRUNCATE TABLE dbo.WorkPeriod
+DELETE dbo.Employee WHERE SuperiorId IS NOT NULL
+DELETE dbo.Employee WHERE SuperiorId IS NULL
+
 
 SELECT @PositionId = PositionId from dbo.Position where PositionName='Chief Executive Officer'
 SELECT @ProjectId = ProjectId from dbo.Project where ProjectName='Company Management'
