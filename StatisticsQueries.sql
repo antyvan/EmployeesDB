@@ -9,7 +9,7 @@ SELECT
 FROM dbo.EmployeeProject empProj
 	JOIN dbo.Project proj on empProj.ProjectId = proj.ProjectId
 	JOIN dbo.Salary sal on empProj.EmployeeId = sal.EmployeeId and sal.EffectiveTo is NULL
-	JOIN dbo.WorkPeriod wp on empProj.EmployeeId = wp.EmployeeId and wp.EffectiveTo is NULL
+	JOIN dbo.Employee emp on empProj.EmployeeId = emp.EmployeeId and emp.EffectiveTo is NULL
 WHERE
 	empProj.EffectiveTo is NULL
 GROUP BY proj.ProjectName
@@ -23,7 +23,7 @@ SELECT
 FROM dbo.EmployeePosition empPos
 	JOIN dbo.Position pos on empPos.PositionId = pos.PositionId
 	JOIN dbo.Salary sal on empPos.EmployeeId = sal.EmployeeId and sal.EffectiveTo is NULL
-	JOIN dbo.WorkPeriod wp on empPos.EmployeeId = wp.EmployeeId and wp.EffectiveTo is NULL
+	JOIN dbo.Employee emp on empPos.EmployeeId = emp.EmployeeId and emp.EffectiveTo is NULL
 WHERE
 	empPos.EffectiveTo is NULL
 GROUP BY pos.PositionName
@@ -36,10 +36,10 @@ SELECT
 	COUNT(empSub.EmployeeId) as SubordinateCount,
 	SUM(sal.MonthlyPay) as TotalMonthlyPay
 FROM dbo.Employee empSup
-	JOIN dbo.WorkPeriod wpSup on empSup.EmployeeId = wpSup.EmployeeId and wpSup.EffectiveTo is NULL
-	JOIN dbo.Employee empSub on empSup.EmployeeId = empSub.SuperiorId
+	JOIN dbo.Employee empSub on empSup.EmployeeId = empSub.SuperiorId AND empSub.EffectiveTo is NULL
 	JOIN dbo.Salary sal on empSub.EmployeeId = sal.EmployeeId and sal.EffectiveTo is NULL
-	JOIN dbo.WorkPeriod wpSub on empSub.EmployeeId = wpSub.EmployeeId and wpSub.EffectiveTo is NULL
+WHERE
+	empSup.EffectiveTo is NULL
 GROUP BY empSup.FirstName, empSup.LastName
 ORDER BY empSup.FirstName, empSup.LastName
 
@@ -61,7 +61,7 @@ SELECT
 	ISNULL(SUM(sal.MonthlyPay), 0) as TotalMonthlyPay
 FROM cte_Subordinates sub
 	JOIN dbo.Salary sal on sub.EmployeeId = sal.EmployeeId and sal.EffectiveTo is NULL
-	JOIN dbo.WorkPeriod wp on sub.EmployeeId = wp.EmployeeId and wp.EffectiveTo is NULL
+	JOIN dbo.Employee subEmp on sub.EmployeeId = subEmp.EmployeeId and subEmp.EffectiveTo is NULL
 WHERE sub.EmployeeId != @SuperiorId
 
 -- Possible improvement: SELECT AN EMPLOYEE HISTORY

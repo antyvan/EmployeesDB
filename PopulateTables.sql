@@ -6,7 +6,6 @@ SET NOCOUNT ON;
 TRUNCATE TABLE dbo.EmployeePosition
 TRUNCATE TABLE dbo.EmployeeProject
 TRUNCATE TABLE dbo.Salary
-TRUNCATE TABLE dbo.WorkPeriod
 DELETE dbo.Employee WHERE SuperiorId IS NOT NULL
 DELETE dbo.Employee WHERE SuperiorId IS NULL
 

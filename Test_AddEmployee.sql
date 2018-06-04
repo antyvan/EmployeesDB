@@ -15,7 +15,6 @@ BEGIN TRANSACTION;
 TRUNCATE TABLE dbo.EmployeePosition
 TRUNCATE TABLE dbo.EmployeeProject
 TRUNCATE TABLE dbo.Salary
-TRUNCATE TABLE dbo.WorkPeriod
 DELETE dbo.Employee WHERE SuperiorId IS NOT NULL
 DELETE dbo.Employee WHERE SuperiorId IS NULL
 
@@ -74,8 +73,8 @@ ELSE
 PRINT 'Test the director has been hired'
 IF 
 	EXISTS(
-			select 1 from dbo.WorkPeriod wp
-			where wp.EmployeeId = @EmployeeId and wp.EffectiveFrom = @EffectiveFrom and wp.EffectiveTo IS NULL
+			select 1 from dbo.Employee
+			where EmployeeId = @EmployeeId and EffectiveFrom = @EffectiveFrom and EffectiveTo IS NULL
 	)
 	PRINT 'Success'
 ELSE
@@ -123,15 +122,9 @@ END CATCH
 select * from dbo.Employee
 select * from dbo.EmployeePosition
 select * from dbo.EmployeeProject
-select * from dbo.WorkPeriod
+
 select * from dbo.Salary
 select * from Position
 select * from Project
-
-delete dbo.EmployeePosition where EmployeeId=2
-delete dbo.EmployeeProject where EmployeeId=2
-delete dbo.WorkPeriod where EmployeeId=2
-delete dbo.Salary where EmployeeId=2
-delete dbo.Employee where EmployeeId=2
 */
 

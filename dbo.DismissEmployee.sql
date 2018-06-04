@@ -42,7 +42,7 @@ BEGIN TRY
 	WHERE EmployeeId = @EmployeeId AND EffectiveTo IS NULL
 
 	-- Close the current work period
-	UPDATE dbo.WorkPeriod SET EffectiveTo = @EffectiveTo
+	UPDATE dbo.Employee SET EffectiveTo = @EffectiveTo
 	WHERE EmployeeId = @EmployeeId AND EffectiveTo IS NULL				
 
 	COMMIT TRAN

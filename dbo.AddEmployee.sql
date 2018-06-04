@@ -31,8 +31,8 @@ BEGIN TRY
 	--Use transactions to guarantee atomic insertion
 	BEGIN TRAN
 
-		INSERT INTO dbo.Employee (FirstName, LastName, SuperiorId)
-		VALUES (@FirstName, @LastName, @SuperiorId)
+		INSERT INTO dbo.Employee (FirstName, LastName, SuperiorId, EffectiveFrom)
+		VALUES (@FirstName, @LastName, @SuperiorId, @EffectiveFrom)
 
 		SET @EmployeeId = @@IDENTITY
 
@@ -46,9 +46,6 @@ BEGIN TRY
 
 		INSERT INTO dbo.Salary(EmployeeId, MonthlyPay, EffectiveFrom)
 		VALUES (@EmployeeId, @MonthlyPay, @EffectiveFrom)
-
-		INSERT INTO dbo.WorkPeriod(EmployeeId, EffectiveFrom)
-		VALUES (@EmployeeId, @EffectiveFrom)
 
 	COMMIT TRAN
 END TRY

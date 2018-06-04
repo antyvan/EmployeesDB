@@ -27,11 +27,6 @@ BEGIN
 	DROP TABLE [dbo].[Salary]
 END
 
-IF OBJECT_ID('EmployeesDB.dbo.WorkPeriod') is not null
-BEGIN
-	DROP TABLE [dbo].[WorkPeriod]
-END
-
 IF OBJECT_ID('EmployeesDB.dbo.Employee') is not null
 BEGIN
 	DROP TABLE [dbo].[Employee]
@@ -47,7 +42,10 @@ CREATE TABLE [dbo].[Employee]
  [FirstName]  VARCHAR(40) NOT NULL,
  [LastName]   VARCHAR(40) NOT NULL,
  [SuperiorId] INT NULL FOREIGN KEY REFERENCES [dbo].[Employee](EmployeeId),
- CONSTRAINT UC_Employee_FLName UNIQUE (FirstName, LastName)
+ [EffectiveFrom] DATE NOT NULL,
+ [EffectiveTo] DATE NULL,
+ CONSTRAINT UC_Employee_FLName UNIQUE (FirstName, LastName),
+ CONSTRAINT CK_Employee_EffectiveFrom_To CHECK (EffectiveTo IS NULL OR EffectiveFrom <= EffectiveTo)
 );
 
 GO
@@ -107,18 +105,6 @@ CREATE TABLE [dbo].[Salary]
  [EffectiveFrom] DATE NOT NULL,
  [EffectiveTo]   DATE NULL,
  CONSTRAINT CK_Salary_EffectiveFrom_To CHECK (EffectiveTo IS NULL OR EffectiveFrom <= EffectiveTo)
-);
-
-GO
-
---************************************** [dbo].[WorkPeriod]
-
-CREATE TABLE [dbo].[WorkPeriod]
-(
- [EmployeeId]    INT NOT NULL FOREIGN KEY REFERENCES [dbo].[Employee](EmployeeId),
- [EffectiveFrom] DATE NOT NULL,
- [EffectiveTo]   DATE NULL,
- CONSTRAINT CK_WorkPeriod_EffectiveFrom_To CHECK (EffectiveTo IS NULL OR EffectiveFrom <= EffectiveTo)
 );
 
 GO
