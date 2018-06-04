@@ -64,29 +64,4 @@ FROM cte_Subordinates sub
 	JOIN dbo.WorkPeriod wp on sub.EmployeeId = wp.EmployeeId and wp.EffectiveTo is NULL
 WHERE sub.EmployeeId != @SuperiorId
 
--- SELECT AN EMPLOYEE HISTORY
-DECLARE @EmployeeId INT
-SELECT @EmployeeId = EmployeeId from dbo.Employee WHERE FirstName= 'Donald' and LastName ='Duck'
-
-SELECT
-	sproj.ProjectName,
-	proj.EffectiveFrom,
-	proj.EffectiveTo
-FROM dbo.EmployeeProject proj
-JOIN dbo.Project sproj ON proj.ProjectId = sproj.ProjectId
-WHERE proj.EmployeeId = @EmployeeId
-
-SELECT
-	spos.PositionName,
-	pos.EffectiveFrom,
-	pos.EffectiveTo
-FROM dbo.EmployeePosition pos
-JOIN dbo.Position spos ON pos.PositionId = spos.PositionId
-WHERE pos.EmployeeId = @EmployeeId
-
-SELECT
-	sal.MonthlyPay,
-	sal.EffectiveFrom,
-	sal.EffectiveTo
-FROM dbo.Salary sal
-WHERE sal.EmployeeId = @EmployeeId
+-- Possible improvement: SELECT AN EMPLOYEE HISTORY
