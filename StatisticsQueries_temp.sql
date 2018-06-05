@@ -104,52 +104,52 @@ FROM (VALUES (1),(2)) AS VALUE(v);
 DECLARE @EmployeeId INT
 SELECT @EmployeeId = EmployeeId from dbo.Employee WHERE FirstName= 'Donald' and LastName ='Duck'
 
-;WITH cte_AllPeriods (PeriodMark, PeriodDate)
-AS
-(
-	SELECT PeriodMark, PeriodDate
-	FROM
-	(
-		SELECT
-			proj.EffectiveFrom,
-			proj.EffectiveTo
-		FROM dbo.EmployeeProject proj
-		WHERE proj.EmployeeId = @EmployeeId
-	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
+--;WITH cte_AllPeriods (PeriodMark, PeriodDate)
+--AS
+--(
+--	SELECT PeriodMark, PeriodDate
+--	FROM
+--	(
+--		SELECT
+--			proj.EffectiveFrom,
+--			proj.EffectiveTo
+--		FROM dbo.EmployeeProject proj
+--		WHERE proj.EmployeeId = @EmployeeId
+--	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
 
-	UNION
+--	UNION
 	
-	SELECT PeriodMark, PeriodDate
-	FROM
-	(
-		SELECT
-			pos.EffectiveFrom,
-			pos.EffectiveTo
-		FROM dbo.EmployeePosition pos
-		WHERE pos.EmployeeId = @EmployeeId
-	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
+--	SELECT PeriodMark, PeriodDate
+--	FROM
+--	(
+--		SELECT
+--			pos.EffectiveFrom,
+--			pos.EffectiveTo
+--		FROM dbo.EmployeePosition pos
+--		WHERE pos.EmployeeId = @EmployeeId
+--	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
 
-	UNION
+--	UNION
 	
-	SELECT PeriodMark, PeriodDate
-	FROM
-	(
-		SELECT
-			sal.EffectiveFrom,
-			sal.EffectiveTo
-		FROM dbo.Salary sal
-		WHERE sal.EmployeeId = @EmployeeId
-	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
-)
-select [EffectiveFrom], [EffectiveTo]
-from
-(
-	select PeriodMark, PeriodDate from cte_AllPeriods order by PeriodDate
-) as source
-PIVOT
-(	COUNT(PeriodDate)
-	FOR 
-)
+--	SELECT PeriodMark, PeriodDate
+--	FROM
+--	(
+--		SELECT
+--			sal.EffectiveFrom,
+--			sal.EffectiveTo
+--		FROM dbo.Salary sal
+--		WHERE sal.EmployeeId = @EmployeeId
+--	) as a UNPIVOT (PeriodDate FOR PeriodMark IN (EffectiveFrom, EffectiveTo)) as unpvt
+--)
+--select [EffectiveFrom], [EffectiveTo]
+--from
+--(
+--	select PeriodMark, PeriodDate from cte_AllPeriods order by PeriodDate
+--) as source
+--PIVOT
+--(	COUNT(PeriodDate)
+--	FOR 
+--)
 
 
 

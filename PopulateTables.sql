@@ -40,3 +40,4 @@ exec dbo.UpdateEmployee @DonaldDuckId, @MonthlyPay = 2500, @EffectiveFrom = '1 N
 exec dbo.UpdateEmployee @DonaldDuckId, @ProjectId = 2, @EffectiveFrom = '2 Jul 2016'
 exec dbo.UpdateEmployeeSuperior @DonaldDuckId, @PMBId
 exec dbo.DismissEmployee @DonaldDuckId, '1 Mar 2017'
+GO
